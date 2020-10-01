@@ -61,5 +61,12 @@ public class UserService {
         }
         return null;
     }
+    public boolean validatePassword(String pass){
+        String password = "^([a-zA-Z0-9@*#]{8,15})$";
+        if(pass.matches(password))
+            return true;
+        else
+            return false;
+    }
 
 }
