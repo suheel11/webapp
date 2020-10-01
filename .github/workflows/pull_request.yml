@@ -5,9 +5,9 @@ on:
     branches:
       - master
 
-job:
+jobs:
 
-  pr-check:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repository
