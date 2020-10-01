@@ -25,7 +25,7 @@ public class UserController {
             String regex = "^[\\w-\\.+]*[\\w-\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 
             if ((user.getEmail() != null && !user.getEmail().matches(regex)) || (!service.validatePassword(user.getPassword()))) {
-                return ResponseEntity.badRequest();
+                throw new Exception();
             }
             return service.saveUser(user);
         }
