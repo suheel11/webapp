@@ -3,16 +3,12 @@ package com.neu.edu.user;
 import com.neu.edu.user.modal.User;
 import com.neu.edu.user.service.UserService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.platform.commons.annotation.Testable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@Testable
 class UserAccountApplicationTests {
-
-    @Autowired
-    private UserService userService;
 
     @Test
     public void getUserTest() {
@@ -24,6 +20,8 @@ class UserAccountApplicationTests {
         u2.setName("suheel");
         u2.setUserId("userid2");
         u2.setEmail("s@s.com");
+        System.out.print(u2.getPassword());
+        UserService userService = new UserService();
         boolean res= userService.validatePassword(u2.getPassword());
         assertFalse(res);
     }
