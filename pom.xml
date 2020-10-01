@@ -30,7 +30,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+            <scope>8.0.21</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/io.swagger/swagger-annotations -->
         <dependency>
