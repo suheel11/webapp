@@ -23,8 +23,8 @@ public class UserController {
         //System.out.println("entered first ");
         try {
             String regex = "^[\\w-\\.+]*[\\w-\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-            String password = "^([a-zA-Z0-9@*#]{8,15})$";
-            if ((user.getEmail() != null && !user.getEmail().matches(regex)) || (!user.getPassword().matches(password))) {
+
+            if ((user.getEmail() != null && !user.getEmail().matches(regex)) || (!service.validatePassword(user.getPassword()))) {
                 return ResponseEntity.badRequest();
             }
             return service.saveUser(user);
