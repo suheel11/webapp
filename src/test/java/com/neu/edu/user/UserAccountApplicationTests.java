@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserAccountApplicationTests {
 
     @Test
-    public void getUserTest() {
+    public void passwordValidFalseTest() {
         User u2 = new User();
         u2.setAccountCreated("date1");
         u2.setPassword("testpassword");
@@ -24,5 +24,21 @@ class UserAccountApplicationTests {
         UserService userService = new UserService();
         boolean res= userService.validatePassword(u2.getPassword());
         assertFalse(res);
+    }
+
+    @Test
+    public void passwordValidTrueTest() {
+        User u1 = new User();
+        u1.setAccountCreated("date1");
+        u1.setPassword("Suheel@1995");
+        u1.setAccountUpdated("date2");
+        u1.setLastName("vallamkonda");
+        u1.setName("suheel");
+        u1.setUserId("userid2");
+        u1.setEmail("s@s.com");
+        System.out.print(u1.getPassword());
+        UserService userService = new UserService();
+        boolean res= userService.validatePassword(u1.getPassword());
+        assertTrue(res);
     }
 }
