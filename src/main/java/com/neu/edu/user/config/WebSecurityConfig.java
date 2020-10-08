@@ -50,9 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/v1/question/**").authenticated()
                 .antMatchers(HttpMethod.POST,"/v1/question/**/answer").authenticated()
                 .antMatchers(HttpMethod.DELETE,"/v1/question/**").authenticated()
-                .antMatchers(HttpMethod.PUT,"/v1/question/**").authenticated()
-                .antMatchers(HttpMethod.DELETE,"/v1/question/*//*").authenticated()
-                .antMatchers(HttpMethod.PUT,"/v1/question/*//*").authenticated().
+                .antMatchers(HttpMethod.PUT,"/v1/question/**").authenticated().
                 and().httpBasic();
 
     }

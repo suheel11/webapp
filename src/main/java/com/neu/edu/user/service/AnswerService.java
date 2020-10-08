@@ -41,7 +41,6 @@ public class AnswerService {
     }
 
     public Object updateAnswerById(User user, String answer_id, Answer answer) {
-        try{
             Answer existingAnswer = answerRepository.findById(answer_id).orElse(null);
             if (existingAnswer == null)
                 return new ResponseEntity<>("Answer Not Found", HttpStatus.NOT_FOUND);
@@ -50,11 +49,8 @@ public class AnswerService {
             existingAnswer.setAnswer_text(answer.getAnswer_text());
             String updateDate = String.valueOf(java.time.LocalDateTime.now());
             existingAnswer.setUpdated_timestamp(updateDate);
-            return answerRepository.save(existingAnswer);
-        }
-        catch (Exception e){
-            throw e;
-        }
+            answerRepository.save(existingAnswer);
+            return new ResponseEntity<>("No Content", HttpStatus.NO_CONTENT);
     }
 
     public Object deleteAnswerById(User user, String question_id, String answer_id) {
