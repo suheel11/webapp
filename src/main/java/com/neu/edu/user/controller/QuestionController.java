@@ -7,6 +7,7 @@ import com.neu.edu.user.service.AnswerService;
 import com.neu.edu.user.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -74,12 +75,12 @@ public class QuestionController {
         }
     }
     @PostMapping(value = "/question/{question_id}/answer")
-    public Answer addAnswer(@AuthenticationPrincipal User user,@RequestBody Answer answer, @PathVariable String question_id){
+    public Object addAnswer(@AuthenticationPrincipal User user,@RequestBody Answer answer, @PathVariable String question_id){
         System.out.println("answer"+answer.getAnswer_text());
         try{
             Question question = questionService.getQuestionById(question_id);
             if(question==null)
-                throw new Exception();
+                return new ResponseEntity<>("Question NOt Found", HttpStatus.NOT_FOUND);
             return answerService.addAnswer(question, answer, user);
         }
         catch (Exception e){
@@ -88,10 +89,10 @@ public class QuestionController {
     }
 
     @PostMapping(value = "/question")
-    public Question addQuestion(@AuthenticationPrincipal User user, @RequestBody Question question){
+    public Object addQuestion(@AuthenticationPrincipal User user, @RequestBody Question question) throws Exception {
         try{
             if(question.getQuestion_text().isEmpty())
-                throw new Exception();
+                return new ResponseEntity<>("Question is empty", HttpStatus.BAD_REQUEST);
             return questionService.addQuestion(question, user);
         }
         catch (Exception e){
@@ -100,8 +101,9 @@ public class QuestionController {
     }
 
     @DeleteMapping(value = "/question/{question_id}/answer/{answer_id}")
-    public void deleteAnswerById(@AuthenticationPrincipal User user, @PathVariable String question_id, @PathVariable String answer_id){
-        answerService.deleteAnswerById(question_id,answer_id);
+    public Object deleteAnswerById(@AuthenticationPrincipal User user, @PathVariable String question_id, @PathVariable String answer_id){
+        answerService.deleteAnswerById(user,question_id,answer_id);
+        return new ResponseEntity<>("No Content", HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(value = "/question/{question_id}")
