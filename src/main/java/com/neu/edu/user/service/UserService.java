@@ -3,12 +3,11 @@ package com.neu.edu.user.service;
 import com.neu.edu.user.modal.User;
 import com.neu.edu.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.regex.*;
 
 @Service
 public class UserService {
@@ -60,6 +59,29 @@ public class UserService {
             return repository.save(existingUser);
         }
         return null;
+    }
+    public boolean validatePassword(String pass){
+        System.out.println("validatePassword");
+        String regex = "^(?=.*[0-9])"
+                + "(?=.*[a-z])(?=.*[A-Z])"
+                + "(?=.*[@#$%^&+=])"
+                + "(?=\\S+$).{8,20}$";
+        Pattern p=Pattern.compile(regex);
+        if (pass == null) {
+            return false;
+        }
+        Matcher m = p.matcher(pass);
+        boolean res=m.matches();
+        System.out.println(res);
+        return  res;
+        //System.out.println("false or tru"+pass.matches(password));
+        /*if(pass.matches(password)) {
+            return true;
+        }
+        else {
+            System.out.println("entered else"+pass);
+            return false;
+        }*/
     }
 
 }

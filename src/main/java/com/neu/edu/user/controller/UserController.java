@@ -9,7 +9,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 
 @RestController
 @RequestMapping(value="/v1/user")
@@ -23,9 +22,9 @@ public class UserController {
         //System.out.println("entered first ");
         try {
             String regex = "^[\\w-\\.+]*[\\w-\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-            String password = "^([a-zA-Z0-9@*#]{8,15})$";
-            if ((user.getEmail() != null && !user.getEmail().matches(regex)) || (!user.getPassword().matches(password))) {
-                return ResponseEntity.badRequest();
+
+            if ((user.getEmail() != null && !user.getEmail().matches(regex)) || (!service.validatePassword(user.getPassword()))) {
+                return new ResponseEntity<>("Please enter valid Credentials", HttpStatus.BAD_REQUEST);
             }
             return service.saveUser(user);
         }
@@ -43,10 +42,36 @@ public class UserController {
     //public List<User> findAllUsers(){
       //  return service.getUsers();
     //}
+    @GetMapping("/{id}")
+    public Object findUserByIdNoAuth(@PathVariable String id){
+        try{
+            User user = service.getUserById(id);
+            System.out.println("user"+user);
+            if (user == null)
+                throw new Exception();
+            else
+                return user;
+        }
+        catch (Exception e){
+            System.out.println("Exception");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found",e);
+        }
+    }
     @GetMapping("/self")
-    public User findUserById(@AuthenticationPrincipal User user){
+    public Object findUserById(@AuthenticationPrincipal User user){
 
-        return service.getUserById(user.getUserId());
+        User u=service.getUserById(user.getUserId());
+        try {
+            if(u==null){
+                return new ResponseEntity<>("Not Found",HttpStatus.NOT_FOUND);
+            }
+            if (!u.getPassword().equalsIgnoreCase(user.getPassword())) {
+                return new ResponseEntity<>("Invalid Credentials",HttpStatus.FORBIDDEN);
+            }
+        }catch(Exception ex){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid Credentials",ex);
+        }
+        return u;
     }
     /*public User findUserById(@AuthenticationPrincipal User user){
         User u=service.getUserById(user.getUserId());
