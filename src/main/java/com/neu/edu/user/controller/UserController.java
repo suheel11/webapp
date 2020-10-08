@@ -4,6 +4,7 @@ import com.neu.edu.user.modal.User;
 import com.neu.edu.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,7 +24,7 @@ public class UserController {
             String regex = "^[\\w-\\.+]*[\\w-\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 
             if ((user.getEmail() != null && !user.getEmail().matches(regex)) || (!service.validatePassword(user.getPassword()))) {
-                throw new Exception();
+                return new ResponseEntity<>("Please enter valid Credentials", HttpStatus.BAD_REQUEST);
             }
             return service.saveUser(user);
         }
@@ -57,9 +58,20 @@ public class UserController {
         }
     }
     @GetMapping("/self")
-    public User findUserById(@AuthenticationPrincipal User user){
+    public Object findUserById(@AuthenticationPrincipal User user){
 
-        return service.getUserById(user.getUserId());
+        User u=service.getUserById(user.getUserId());
+        try {
+            if(u==null){
+                return new ResponseEntity<>("Not Found",HttpStatus.NOT_FOUND);
+            }
+            if (!u.getPassword().equalsIgnoreCase(user.getPassword())) {
+                return new ResponseEntity<>("Invalid Credentials",HttpStatus.FORBIDDEN);
+            }
+        }catch(Exception ex){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid Credentials",ex);
+        }
+        return u;
     }
     /*public User findUserById(@AuthenticationPrincipal User user){
         User u=service.getUserById(user.getUserId());

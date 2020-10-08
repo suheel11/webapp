@@ -7,6 +7,7 @@ import com.neu.edu.user.repository.AnswerRepository;
 import com.neu.edu.user.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -43,9 +44,9 @@ public class AnswerService {
         try{
             Answer existingAnswer = answerRepository.findById(answer_id).orElse(null);
             if (existingAnswer == null)
-                return new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found");
+                return new ResponseEntity<>("Answer Not Found", HttpStatus.NOT_FOUND);
             if (!(user.getUserId().equals(existingAnswer.getUserId())))
-                return new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+                return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
             existingAnswer.setAnswer_text(answer.getAnswer_text());
             String updateDate = String.valueOf(java.time.LocalDateTime.now());
             existingAnswer.setUpdated_timestamp(updateDate);
@@ -56,13 +57,18 @@ public class AnswerService {
         }
     }
 
-    public void deleteAnswerById(String question_id, String answer_id) {
+    public Object deleteAnswerById(User user, String question_id, String answer_id) {
         Question question=questionRepository.findById(question_id).orElse(null);
         Answer answer=answerRepository.findById(answer_id).orElse(null);
+        if(answer==null)
+            return new ResponseEntity<>("Answer not Found", HttpStatus.NOT_FOUND);
+        if(!(answer.getUserId().equals(user.getUserId())))
+            return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         List<Answer> a = question.getAnswers();
         a.remove(answer);
         question.setAnswers(a);
         questionRepository.save(question);
         answerRepository.deleteById(answer_id);
+        return new ResponseEntity<>("No Content", HttpStatus.NO_CONTENT);
     }
 }

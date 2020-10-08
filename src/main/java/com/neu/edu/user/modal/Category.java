@@ -23,6 +23,6 @@ public class Category {
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     private String categoryId;
     private String category;
-    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "categories")
-    private Set<Question> questions=new HashSet<>();
+    /*@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "categories")
+    private Set<Question> questions=new HashSet<>();*/
 }

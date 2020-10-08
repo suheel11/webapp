@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,11 +29,11 @@ public class Question {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY, value="updated_timestamp")
     private String updated_timestamp;
     private String question_text;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "ques_cats",
+    @ManyToMany(/*fetch = FetchType.LAZY*/cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    /*@JoinTable(name = "ques_cats",
             joinColumns = {@JoinColumn(name = "questionId")},
-            inverseJoinColumns = {@JoinColumn(name = "categoryId")})
-    private Set<Category> categories=new HashSet<>();
+            inverseJoinColumns = {@JoinColumn(name = "categoryId")})*/
+    private List<Category> categories=new ArrayList<>();
     @OneToMany(targetEntity = Answer.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "qa_fk",referencedColumnName = "questionId")
     private List<Answer> answers;
