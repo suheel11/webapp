@@ -66,9 +66,14 @@ public class QuestionController {
     }
 
     @PutMapping(value = "/question/{question_id}")
-    public Question updateQuestionById(@AuthenticationPrincipal User user,@RequestBody Question question,@PathVariable String question_id){
+    public Object updateQuestionById(@AuthenticationPrincipal User user,@RequestBody Question question,@PathVariable String question_id){
         try{
-            return questionService.updateQuestionById(user, question_id, question);
+            if(question.getQuestion_text().isEmpty()||question.getQuestion_text().equals(""))
+                    return new ResponseEntity<>("Question text empty", HttpStatus.BAD_REQUEST);
+            else{
+                Object o= questionService.updateQuestionById(user, question_id, question);
+                return o;
+            }
         }
         catch (Exception e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "UnAuthorised",e);
@@ -78,6 +83,8 @@ public class QuestionController {
     public Object addAnswer(@AuthenticationPrincipal User user,@RequestBody Answer answer, @PathVariable String question_id){
         System.out.println("answer"+answer.getAnswer_text());
         try{
+            if(answer.getAnswer_text().isEmpty()||answer.getAnswer_text().equals(""))
+                return new ResponseEntity<>("Answer text is empty", HttpStatus.BAD_REQUEST);
             Question question = questionService.getQuestionById(question_id);
             if(question==null)
                 return new ResponseEntity<>("Question NOt Found", HttpStatus.NOT_FOUND);
@@ -102,18 +109,19 @@ public class QuestionController {
 
     @DeleteMapping(value = "/question/{question_id}/answer/{answer_id}")
     public Object deleteAnswerById(@AuthenticationPrincipal User user, @PathVariable String question_id, @PathVariable String answer_id){
-        answerService.deleteAnswerById(user,question_id,answer_id);
-        return new ResponseEntity<>("No Content", HttpStatus.NO_CONTENT);
+        Object o=answerService.deleteAnswerById(user,question_id,answer_id);
+        return o;
     }
 
     @DeleteMapping(value = "/question/{question_id}")
     public Object deleteQuestionById(@AuthenticationPrincipal User user, @PathVariable String question_id){
         try{
-            questionService.deleteQuestionById(user, question_id);
-            return "success";
+            System.out.println("queson");
+            Object o=questionService.deleteQuestionById(user, question_id);
+            return o;
         }
         catch (Exception e){
-            return e;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not Found",e);
         }
     }
 }
