@@ -1,12 +1,7 @@
 package com.neu.edu.user.service;
 
-import com.neu.edu.user.modal.Answer;
-import com.neu.edu.user.modal.Category;
-import com.neu.edu.user.modal.Question;
-import com.neu.edu.user.modal.User;
-import com.neu.edu.user.repository.AnswerRepository;
-import com.neu.edu.user.repository.CategoryRepository;
-import com.neu.edu.user.repository.QuestionRepository;
+import com.neu.edu.user.modal.*;
+import com.neu.edu.user.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +21,10 @@ public class QuestionService {
     private CategoryRepository categoryRepository;
     @Autowired
     private AnswerRepository answerRepository;
+    @Autowired
+    private FileRepository fileRepository;
+    @Autowired
+    private AnswerFileRepository answerFileRepository;
 
     public Question addQuestion(Question question, User user) throws Exception {
         String date = String.valueOf(java.time.LocalDateTime.now());
@@ -140,5 +139,38 @@ public class QuestionService {
         existingQuestion.setCategories(question.getCategories());
         questionRepository.save(existingQuestion);
         return new ResponseEntity<>("No Content", HttpStatus.NO_CONTENT);
+    }
+
+    public QuestionFiles saveFile(QuestionFiles f){
+        String date = String.valueOf(java.time.LocalDateTime.now());
+        f.setCreatedDate(date);
+        return fileRepository.save(f);
+    }
+
+    public QuestionFiles getFile(String fileId){
+        try {
+            return fileRepository.findById(fileId).get();
+        }catch(Exception e){
+            return null;
+        }
+    }
+    public void deleteFile(String question_id, String file_id){
+        fileRepository.deleteById(file_id);
+    }
+
+    public AnswerFiles saveAnswerFile(AnswerFiles f){
+        String date = String.valueOf(java.time.LocalDateTime.now());
+        f.setCreatedDate(date);
+        return answerFileRepository.save(f);
+    }
+    public AnswerFiles getAnswerFile(String fileId){
+        try {
+            return answerFileRepository.findById(fileId).get();
+        }catch(Exception e){
+            return null;
+        }
+    }
+    public void deleteAnswerFile(String answer_id, String file_id){
+        answerFileRepository.deleteById(file_id);
     }
 }
