@@ -26,11 +26,6 @@ public class AnswerFiles {
     private String userId;
     private String fileName;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY,value="answer")
-    @ManyToOne
-    @JoinColumn(name="answerId", nullable=false,insertable = false,updatable = false)
-    private Answer answers;
-
     private String createdDate;
     private String s3objectName;
 

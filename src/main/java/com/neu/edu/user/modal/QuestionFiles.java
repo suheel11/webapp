@@ -25,10 +25,6 @@ public class QuestionFiles {
     private String userId;
 
     private String fileName;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY,value="question")
-    @ManyToOne
-    @JoinColumn(name="questionId", nullable=false,insertable = false,updatable = false)
-    private Question question;
     private String createdDate;
     private String s3objectName;
 
