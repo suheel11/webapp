@@ -38,4 +38,7 @@ public class Question {
     @JoinColumn(name = "qa_fk",referencedColumnName = "questionId")
     private List<Answer> answers;
     private String userId;
+    @OneToMany(targetEntity = QuestionFiles.class,cascade = CascadeType.ALL)
+    @JoinColumn(name = "qfa_fk",referencedColumnName = "questionId")
+    private List<QuestionFiles> files;
 }

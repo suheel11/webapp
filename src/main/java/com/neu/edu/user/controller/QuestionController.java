@@ -137,6 +137,13 @@ public class QuestionController {
 
     @PostMapping(value="/question/{question_id}/file",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Object uploadFile(@AuthenticationPrincipal User loggedUser, @PathVariable String question_id , @RequestParam(value = "file") MultipartFile file){
+
+        Question q = questionService.getQuestionById(question_id);
+        if(q==null)
+            return new ResponseEntity<>("Id not found",HttpStatus.NOT_FOUND);
+        if(!loggedUser.getUserId().equals(q.getUserId()))
+            return new ResponseEntity<>("User Cannot Update/delete question",HttpStatus.UNAUTHORIZED);
+
         BasicAWSCredentials creds = new BasicAWSCredentials("AKIAIYOUW7X7M2SFYXOA", "wOPvGIPOob05wuIFmME8iVRZV8F/fEeEMydcHr/3");
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
@@ -144,7 +151,6 @@ public class QuestionController {
         UUID uuid = UUID.randomUUID();
         String keyName = question_id+"/"+uuid.toString()+"/"+file.getOriginalFilename();
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-
         if(!extension.equals("png")&&!extension.equals("jpg")&&!extension.equals("jpeg")){
             return new ResponseEntity<>("Invalid Image Type",HttpStatus.BAD_REQUEST);
         }
@@ -175,6 +181,10 @@ public class QuestionController {
     @DeleteMapping(value="/question/{question_id}/file/{file_id}")
     public Object deleteFile(@AuthenticationPrincipal User loggedUser, @PathVariable String question_id, @PathVariable String file_id ){
         QuestionFiles files = questionService.getFile(file_id);
+        if(files==null)
+            return new ResponseEntity<>("Id not found",HttpStatus.NOT_FOUND);
+        if(!loggedUser.getUserId().equals(files.getUserId()))
+            return new ResponseEntity<>("User Cannot Update/delete question",HttpStatus.UNAUTHORIZED);
         BasicAWSCredentials creds = new BasicAWSCredentials("AKIAIYOUW7X7M2SFYXOA", "wOPvGIPOob05wuIFmME8iVRZV8F/fEeEMydcHr/3");
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
@@ -199,6 +209,11 @@ public class QuestionController {
 
     @PostMapping(value="/question/{question_id}/answer/{answer_id}/file",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Object uploadAnswerFile(@AuthenticationPrincipal User loggedUser, @PathVariable String question_id ,@PathVariable String answer_id , @RequestParam(value = "file") MultipartFile file){
+        Answer ans = answerService.getAnswer(answer_id);
+        if(ans==null)
+            return new ResponseEntity<>("Id Not Found",HttpStatus.NOT_FOUND);
+        if(!ans.getUserId().equals(loggedUser.getUserId()))
+            return new ResponseEntity<>("Cannot Upload File",HttpStatus.UNAUTHORIZED);
         BasicAWSCredentials creds = new BasicAWSCredentials("AKIAIYOUW7X7M2SFYXOA", "wOPvGIPOob05wuIFmME8iVRZV8F/fEeEMydcHr/3");
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
@@ -240,6 +255,10 @@ public class QuestionController {
     @DeleteMapping(value="/question/{question_id}/answer/{answer_id}/file/{file_id}")
     public Object deleteAnswerFile(@AuthenticationPrincipal User loggedUser, @PathVariable String question_id,@PathVariable String answer_id, @PathVariable String file_id ){
         AnswerFiles files = questionService.getAnswerFile(file_id);
+        if(files==null)
+            return new ResponseEntity<>("Id Not Found",HttpStatus.NOT_FOUND);
+        if(!files.getUserId().equals(loggedUser.getUserId()))
+            return new ResponseEntity<>("Cannot Delete File",HttpStatus.UNAUTHORIZED);
         BasicAWSCredentials creds = new BasicAWSCredentials("AKIAIYOUW7X7M2SFYXOA", "wOPvGIPOob05wuIFmME8iVRZV8F/fEeEMydcHr/3");
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();

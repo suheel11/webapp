@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -26,4 +27,7 @@ public class Answer {
     private String updated_timestamp;
     private String userId;
     private String answer_text;
+    @OneToMany(targetEntity = AnswerFiles.class,cascade = CascadeType.ALL)
+    @JoinColumn(name = "af_fk",referencedColumnName = "answerId")
+    private List<AnswerFiles> files;
 }
