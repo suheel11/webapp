@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo systemctl start tomcat9
+java -jar user-0.0.1-SNAPSHOT.jar
