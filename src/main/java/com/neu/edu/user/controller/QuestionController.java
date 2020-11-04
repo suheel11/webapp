@@ -137,7 +137,7 @@ public class QuestionController {
 
     @PostMapping(value="/question/{question_id}/file",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Object uploadFile(@AuthenticationPrincipal User loggedUser, @PathVariable String question_id , @RequestParam(value = "file") MultipartFile file){
-        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAINOIGOMFMLGRZJ6A", "6BMEx31atzKij58irMotZn4/PVE2OHSGRUjxieeO");
+        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAIYOUW7X7M2SFYXOA", "wOPvGIPOob05wuIFmME8iVRZV8F/fEeEMydcHr/3");
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
@@ -175,7 +175,7 @@ public class QuestionController {
     @DeleteMapping(value="/question/{question_id}/file/{file_id}")
     public Object deleteFile(@AuthenticationPrincipal User loggedUser, @PathVariable String question_id, @PathVariable String file_id ){
         QuestionFiles files = questionService.getFile(file_id);
-        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAINOIGOMFMLGRZJ6A", "6BMEx31atzKij58irMotZn4/PVE2OHSGRUjxieeO");
+        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAIYOUW7X7M2SFYXOA", "wOPvGIPOob05wuIFmME8iVRZV8F/fEeEMydcHr/3");
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
@@ -199,7 +199,7 @@ public class QuestionController {
 
     @PostMapping(value="/question/{question_id}/answer/{answer_id}/file",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Object uploadAnswerFile(@AuthenticationPrincipal User loggedUser, @PathVariable String question_id ,@PathVariable String answer_id , @RequestParam(value = "file") MultipartFile file){
-        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAINOIGOMFMLGRZJ6A", "6BMEx31atzKij58irMotZn4/PVE2OHSGRUjxieeO");
+        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAIYOUW7X7M2SFYXOA", "wOPvGIPOob05wuIFmME8iVRZV8F/fEeEMydcHr/3");
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
@@ -240,7 +240,7 @@ public class QuestionController {
     @DeleteMapping(value="/question/{question_id}/answer/{answer_id}/file/{file_id}")
     public Object deleteAnswerFile(@AuthenticationPrincipal User loggedUser, @PathVariable String question_id,@PathVariable String answer_id, @PathVariable String file_id ){
         AnswerFiles files = questionService.getAnswerFile(file_id);
-        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAINOIGOMFMLGRZJ6A", "6BMEx31atzKij58irMotZn4/PVE2OHSGRUjxieeO");
+        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAIYOUW7X7M2SFYXOA", "wOPvGIPOob05wuIFmME8iVRZV8F/fEeEMydcHr/3");
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
