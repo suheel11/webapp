@@ -95,7 +95,8 @@ public class UserController {
             if(user.getEmail()!=null||user.getAccountCreated()!=null||user.getAccountUpdated()!=null){
                 throw new Exception();
             }
-            return service.updateUser(user1.getUserId(), user);
+            service.updateUser(user1.getUserId(), user);
+            return new ResponseEntity<>("No Content",HttpStatus.NO_CONTENT);
         }
         catch (Exception e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad Request",e);

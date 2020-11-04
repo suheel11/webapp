@@ -1,14 +1,10 @@
 package com.neu.edu.user.service;
 
-import com.neu.edu.user.modal.Answer;
-import com.neu.edu.user.modal.Category;
-import com.neu.edu.user.modal.Question;
-import com.neu.edu.user.modal.User;
-import com.neu.edu.user.repository.AnswerRepository;
-import com.neu.edu.user.repository.CategoryRepository;
-import com.neu.edu.user.repository.QuestionRepository;
+import com.neu.edu.user.modal.*;
+import com.neu.edu.user.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,6 +21,10 @@ public class QuestionService {
     private CategoryRepository categoryRepository;
     @Autowired
     private AnswerRepository answerRepository;
+    @Autowired
+    private FileRepository fileRepository;
+    @Autowired
+    private AnswerFileRepository answerFileRepository;
 
     public Question addQuestion(Question question, User user) throws Exception {
         String date = String.valueOf(java.time.LocalDateTime.now());
@@ -86,22 +86,91 @@ public class QuestionService {
         return questionRepository.findAll();
     }
 
-    public void deleteQuestionById(User user, String question_id) throws Exception {
+    public Object deleteQuestionById(User user, String question_id) throws Exception {
         Question existingQuestion = questionRepository.findById(question_id).orElse(null);
+        System.out.println("questtttt");
+        if(existingQuestion==null)
+            return new ResponseEntity<>("Question Not found", HttpStatus.NOT_FOUND);
+        if(!(user.getUserId().equals(existingQuestion.getUserId())))
+            return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+        if(existingQuestion.getAnswers().size()>0){
+            return new ResponseEntity<>("Answer exists - could not delete", HttpStatus.BAD_REQUEST);
+        }
+        else{
+            questionRepository.deleteById(question_id);
+            return new ResponseEntity<>("Not content", HttpStatus.NO_CONTENT);
+        }
+
         /*if(!(user.getUserId().equals(existingQuestion.getUserId())))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorised");
         if(existingQuestion.getAnswers().size()!=0)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad Request");*/
-        questionRepository.deleteById(question_id);
+
     }
 
-    public Question updateQuestionById(User user, String question_id, Question question) throws Exception {
+    public Object updateQuestionById(User user, String question_id, Question question) throws Exception {
         Question existingQuestion = questionRepository.findById(question_id).orElse(null);
+        if(existingQuestion==null)
+            return new ResponseEntity<>("Question Not found", HttpStatus.NOT_FOUND);
         if(!(user.getUserId().equals(existingQuestion.getUserId())))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorised");
+            return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         existingQuestion.setQuestion_text(question.getQuestion_text());
         String date = String.valueOf(java.time.LocalDateTime.now());
         existingQuestion.setUpdated_timestamp(date);
-        return questionRepository.save(existingQuestion);
+        List<Category> categoryList = new ArrayList<Category>();
+        List<String> categories= new ArrayList<String>();
+        if(question.getCategories()!=null&&question.getCategories().size()>0){
+            for(Category cat:question.getCategories()){
+                String catLower=cat.getCategory().toLowerCase().trim();
+                if(!categories.contains(catLower)){
+                    Category existingCat= categoryRepository.findByCategory(catLower);
+                    if(existingCat==null){
+                        cat.setCategory(catLower);
+                        existingCat=cat;
+                        existingCat=categoryRepository.save(existingCat);
+                    }
+                    categories.add(catLower);
+                    categoryList.add(existingCat);
+                }
+            }
+            question.setCategories(null);
+            question.setCategories(categoryList);
+        }
+        existingQuestion.setCategories(question.getCategories());
+        questionRepository.save(existingQuestion);
+        return new ResponseEntity<>("No Content", HttpStatus.NO_CONTENT);
+    }
+
+    public QuestionFiles saveFile(QuestionFiles f){
+        String date = String.valueOf(java.time.LocalDateTime.now());
+        f.setCreatedDate(date);
+        return fileRepository.save(f);
+    }
+
+    public QuestionFiles getFile(String fileId){
+        try {
+            return fileRepository.findById(fileId).get();
+        }catch(Exception e){
+            return null;
+        }
+    }
+    public void deleteFile(String question_id, String file_id){
+        fileRepository.deleteById(file_id);
+    }
+
+    public AnswerFiles saveAnswerFile(AnswerFiles f){
+        String date = String.valueOf(java.time.LocalDateTime.now());
+        f.setCreatedDate(date);
+        return answerFileRepository.save(f);
+    }
+    public AnswerFiles getAnswerFile(String fileId){
+        try {
+            return answerFileRepository.findById(fileId).get();
+        }catch(Exception e){
+            return null;
+        }
+    }
+    public void deleteAnswerFile(String answer_id, String file_id){
+        answerFileRepository.deleteById(file_id);
     }
 }
