@@ -17,8 +17,6 @@ public class QuestionFiles {
     @GeneratedValue(generator="system-uuid")
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     private String fileId;
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY,value="questionId")
     private String questionId;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY,value="userId")
