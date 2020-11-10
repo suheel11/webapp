@@ -164,6 +164,10 @@ public class QuestionController {
             f.setSize(String.valueOf(file.getSize()));
             f.setS3objectName(keyName);
             QuestionFiles output = questionService.saveFile(f);
+            List<QuestionFiles> l = new ArrayList<>();
+                l.add(f);
+                q.setFiles(l);
+                questionService.updateQuestionById(loggedUser,question_id,q);
             File convFile = new File(file.getOriginalFilename());
             convFile.createNewFile();
             FileOutputStream fos = new FileOutputStream(convFile);
