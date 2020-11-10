@@ -246,12 +246,11 @@ public class QuestionController {
             f.setFileName(file.getName());
             f.setSize(String.valueOf(file.getSize()));
             f.setS3objectName(keyName);
+            AnswerFiles output = questionService.saveAnswerFile(f);
             List<AnswerFiles> l = new ArrayList<>();
             l.add(f);
             ans.setFiles(l);
             answerService.updateAnswerById(loggedUser,question_id,ans);
-            AnswerFiles output = questionService.saveAnswerFile(f);
-
             File convFile = new File(file.getOriginalFilename());
             convFile.createNewFile();
             FileOutputStream fos = new FileOutputStream(convFile);
