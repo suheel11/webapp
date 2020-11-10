@@ -208,6 +208,10 @@ public class QuestionController {
         try {
             System.out.println(file_id);
             questionService.deleteFile(question_id, file_id);
+            Question q2 = questionService.getQuestionById(question_id);
+            List l= q2.getFiles();
+            l.remove(files);
+            questionService.updateQuestionById(loggedUser,question_id,q2);
             return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
         }catch(Exception e){
             System.out.println(e.getMessage());
@@ -242,6 +246,10 @@ public class QuestionController {
             f.setFileName(file.getName());
             f.setSize(String.valueOf(file.getSize()));
             f.setS3objectName(keyName);
+            List<AnswerFiles> l = new ArrayList<>();
+            l.add(f);
+            ans.setFiles(l);
+            answerService.updateAnswerById(loggedUser,question_id,ans);
             AnswerFiles output = questionService.saveAnswerFile(f);
 
             File convFile = new File(file.getOriginalFilename());
@@ -256,6 +264,9 @@ public class QuestionController {
 
         }catch(AmazonServiceException | IOException e){
             System.out.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -282,6 +293,10 @@ public class QuestionController {
             return new ResponseEntity<>("Cannot Delete File",HttpStatus.UNAUTHORIZED);
         try {
             System.out.println(file_id);
+            Answer a2 = answerService.getAnswer(answer_id);
+            List l= a2.getFiles();
+            l.remove(files);
+            answerService.updateAnswerById(loggedUser,answer_id,a2);
             questionService.deleteAnswerFile(answer_id, file_id);
             return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
         }catch(Exception e){
