@@ -144,7 +144,7 @@ public class QuestionController {
         if(!loggedUser.getUserId().equals(q.getUserId()))
             return new ResponseEntity<>("User Cannot Update/delete question",HttpStatus.UNAUTHORIZED);
 
-        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAINOIGOMFMLGRZJ6A", "6BMEx31atzKij58irMotZn4/PVE2OHSGRUjxieeO");
+        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAYWIPQKRHHPDEHIRX", "xUAKGitgjGwbi2/H+/EAbWOMpfeRwJFDtWBSj6dw");
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
@@ -185,7 +185,7 @@ public class QuestionController {
             return new ResponseEntity<>("Id not found",HttpStatus.NOT_FOUND);
         if(!loggedUser.getUserId().equals(files.getUserId()))
             return new ResponseEntity<>("User Cannot Update/delete question",HttpStatus.UNAUTHORIZED);
-        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAINOIGOMFMLGRZJ6A", "6BMEx31atzKij58irMotZn4/PVE2OHSGRUjxieeO");
+        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAYWIPQKRHHPDEHIRX", "xUAKGitgjGwbi2/H+/EAbWOMpfeRwJFDtWBSj6dw");
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
@@ -214,7 +214,7 @@ public class QuestionController {
             return new ResponseEntity<>("Id Not Found",HttpStatus.NOT_FOUND);
         if(!ans.getUserId().equals(loggedUser.getUserId()))
             return new ResponseEntity<>("Cannot Upload File",HttpStatus.UNAUTHORIZED);
-        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAINOIGOMFMLGRZJ6A", "6BMEx31atzKij58irMotZn4/PVE2OHSGRUjxieeO");
+        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAYWIPQKRHHPDEHIRX", "xUAKGitgjGwbi2/H+/EAbWOMpfeRwJFDtWBSj6dw");
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
@@ -259,7 +259,7 @@ public class QuestionController {
             return new ResponseEntity<>("Id Not Found",HttpStatus.NOT_FOUND);
         if(!files.getUserId().equals(loggedUser.getUserId()))
             return new ResponseEntity<>("Cannot Delete File",HttpStatus.UNAUTHORIZED);
-        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAINOIGOMFMLGRZJ6A", "6BMEx31atzKij58irMotZn4/PVE2OHSGRUjxieeO");
+        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAYWIPQKRHHPDEHIRX", "xUAKGitgjGwbi2/H+/EAbWOMpfeRwJFDtWBSj6dw");
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
