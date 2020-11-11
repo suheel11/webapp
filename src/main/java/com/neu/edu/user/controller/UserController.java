@@ -2,6 +2,8 @@ package com.neu.edu.user.controller;
 
 import com.neu.edu.user.modal.User;
 import com.neu.edu.user.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +19,12 @@ public class UserController {
     @Autowired
     private UserService service;
 
+    private final static Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @PostMapping
     public Object addUser(@RequestBody User user){
         //System.out.println("entered first ");
+        logger.info("This is Info message");
         try {
             String regex = "^[\\w-\\.+]*[\\w-\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 
@@ -30,6 +35,7 @@ public class UserController {
         }
         catch (Exception e){
             System.out.println("inside catch");
+            logger.error("This is an error message");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad Request",e);
         }
     }
