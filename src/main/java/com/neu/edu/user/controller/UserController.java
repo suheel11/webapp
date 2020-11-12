@@ -25,16 +25,17 @@ public class UserController {
     @PostMapping
     public Object addUser(@RequestBody User user){
         //System.out.println("entered first ");
-        logger.info("This is Info message");
+        logger.info("Method - Add user");
         long startTime = System.currentTimeMillis();
         client.incrementCounter("/user");
-
         try {
             String regex = "^[\\w-\\.+]*[\\w-\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 
             if ((user.getEmail() != null && !user.getEmail().matches(regex)) || (!service.validatePassword(user.getPassword()))) {
+                logger.warn("Please enter valid email ad passwords");
                 return new ResponseEntity<>("Please enter valid Credentials", HttpStatus.BAD_REQUEST);
             }
+            logger.info("Added user successfully");
             long endTime = System.currentTimeMillis();
             long duration = endTime - startTime;
             client.recordExecutionTime("/user",duration);
@@ -43,7 +44,7 @@ public class UserController {
         }
         catch (Exception e){
             System.out.println("inside catch");
-            logger.error("This is an error message");
+            logger.error("Bad Request");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad Request",e);
         }
     }
@@ -59,8 +60,14 @@ public class UserController {
     @GetMapping("/{id}")
     public Object findUserByIdNoAuth(@PathVariable String id){
         try{
+            logger.info("Method - Find user by id");
+            long startTime = System.currentTimeMillis();
+            client.incrementCounter("/{id}");
             User user = service.getUserById(id);
             System.out.println("user"+user);
+            long endTime = System.currentTimeMillis();
+            long duration = endTime - startTime;
+            client.recordExecutionTime("/{id}",duration);
             if (user == null)
                 throw new Exception();
             else
@@ -68,23 +75,32 @@ public class UserController {
         }
         catch (Exception e){
             System.out.println("Exception");
+            logger.error("Not found");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found",e);
         }
     }
     @GetMapping("/self")
     public Object findUserById(@AuthenticationPrincipal User user){
-
+        logger.info("Method - Find user by id");
+        long startTime = System.currentTimeMillis();
+        client.incrementCounter("/self");
         User u=service.getUserById(user.getUserId());
         try {
             if(u==null){
+                logger.error("User Not Found");
                 return new ResponseEntity<>("Not Found",HttpStatus.NOT_FOUND);
             }
             if (!u.getPassword().equalsIgnoreCase(user.getPassword())) {
+                logger.error("Invalid password");
                 return new ResponseEntity<>("Invalid Credentials",HttpStatus.FORBIDDEN);
             }
         }catch(Exception ex){
+            logger.error("Invalid credentials");
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid Credentials",ex);
         }
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        client.recordExecutionTime("/self",duration);
         return u;
     }
     /*public User findUserById(@AuthenticationPrincipal User user){
@@ -106,10 +122,18 @@ public class UserController {
         //System.out.println("useremail"+user.getEmail());
         //System.out.println("user"+user.getUserId());
         try {
+            logger.info("Method - Update user");
+            long startTime = System.currentTimeMillis();
+            client.incrementCounter("/self");
             if(user.getEmail()!=null||user.getAccountCreated()!=null||user.getAccountUpdated()!=null){
+                logger.error("Invalid email");
                 throw new Exception();
             }
             service.updateUser(user1.getUserId(), user);
+            logger.info("User updated successfully");
+            long endTime = System.currentTimeMillis();
+            long duration = endTime - startTime;
+            client.recordExecutionTime("/self",duration);
             return new ResponseEntity<>("No Content",HttpStatus.NO_CONTENT);
         }
         catch (Exception e){

@@ -1,10 +1,13 @@
 package com.neu.edu.user.service;
 
+import com.neu.edu.user.controller.UserController;
 import com.neu.edu.user.modal.Answer;
 import com.neu.edu.user.modal.Question;
 import com.neu.edu.user.modal.User;
 import com.neu.edu.user.repository.AnswerRepository;
 import com.neu.edu.user.repository.QuestionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,7 @@ public class AnswerService {
     private QuestionRepository questionRepository;
     @Autowired
     private AnswerRepository answerRepository;
+    private final static Logger logger = LoggerFactory.getLogger(AnswerService.class);
     public Answer getAnswer(String answer_id) {
        // Question question = questionRepository.findById(question_id).get();
         return answerRepository.findById(answer_id).orElse(null);
@@ -42,10 +46,15 @@ public class AnswerService {
 
     public Object updateAnswerById(User user, String answer_id, Answer answer) {
             Answer existingAnswer = answerRepository.findById(answer_id).orElse(null);
-            if (existingAnswer == null)
+            if (existingAnswer == null){
+                logger.error("Answer not found");
                 return new ResponseEntity<>("Answer Not Found", HttpStatus.NOT_FOUND);
-            if (!(user.getUserId().equals(existingAnswer.getUserId())))
+            }
+            if (!(user.getUserId().equals(existingAnswer.getUserId()))){
+                logger.error("Unauthorised");
                 return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+            }
+
             existingAnswer.setAnswer_text(answer.getAnswer_text());
             String updateDate = String.valueOf(java.time.LocalDateTime.now());
             existingAnswer.setUpdated_timestamp(updateDate);
@@ -56,10 +65,14 @@ public class AnswerService {
     public Object deleteAnswerById(User user, String question_id, String answer_id) {
         Question question=questionRepository.findById(question_id).orElse(null);
         Answer answer=answerRepository.findById(answer_id).orElse(null);
-        if(answer==null)
+        if(answer==null){
+            logger.error("Answer not found");
             return new ResponseEntity<>("Answer not Found", HttpStatus.NOT_FOUND);
-        if(!(answer.getUserId().equals(user.getUserId())))
+        }
+        if(!(answer.getUserId().equals(user.getUserId()))){
+            logger.error("Unauthorized");
             return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+        }
         List<Answer> a = question.getAnswers();
         a.remove(answer);
         question.setAnswers(a);
