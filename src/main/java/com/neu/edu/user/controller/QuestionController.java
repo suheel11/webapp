@@ -10,6 +10,7 @@ import com.neu.edu.user.service.AnswerService;
 import com.neu.edu.user.service.QuestionService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,13 +29,17 @@ import java.util.*;
 
 @RestController
 @RequestMapping(value="/v1")
-public class QuestionController {
+public class QuestionController implements EnvironmentAware {
     @Autowired
     private QuestionService questionService;
     @Autowired
     private AnswerService answerService;
-    @Autowired
+
     private Environment env;
+    @Override
+    public void setEnvironment(final Environment environment) {
+        this.env = environment;
+    }
 
     @GetMapping(value="/question/{question_id}/answer/{answer_id}")
     public Object getAnswer(@PathVariable String question_id, @PathVariable String answer_id){
