@@ -9,6 +9,8 @@ import com.neu.edu.user.modal.*;
 import com.neu.edu.user.service.AnswerService;
 import com.neu.edu.user.service.QuestionService;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +38,7 @@ public class QuestionController implements EnvironmentAware {
     private QuestionService questionService;
     @Autowired
     private AnswerService answerService;
+    private final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private Environment env;
     @Override
@@ -156,6 +159,8 @@ public class QuestionController implements EnvironmentAware {
             return new ResponseEntity<>("User Cannot Update/delete question",HttpStatus.UNAUTHORIZED);
         String accessKey=env.getProperty("aws-access-key-id");
         String secretKey=env.getProperty("aws-secret-access-key");
+        logger.info("This is access key message");
+        logger.info(accessKey);
         BasicAWSCredentials creds = new BasicAWSCredentials(accessKey,secretKey);
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
