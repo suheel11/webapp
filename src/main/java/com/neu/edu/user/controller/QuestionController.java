@@ -11,6 +11,7 @@ import com.neu.edu.user.service.QuestionService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.*;
 
+@Configuration
 @RestController
 @RequestMapping(value="/v1")
 public class QuestionController implements EnvironmentAware {
