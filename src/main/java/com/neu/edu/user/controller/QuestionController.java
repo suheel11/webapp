@@ -10,6 +10,7 @@ import com.neu.edu.user.service.AnswerService;
 import com.neu.edu.user.service.QuestionService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,8 @@ public class QuestionController {
     private QuestionService questionService;
     @Autowired
     private AnswerService answerService;
+    @Autowired
+    private Environment env;
 
     @GetMapping(value="/question/{question_id}/answer/{answer_id}")
     public Object getAnswer(@PathVariable String question_id, @PathVariable String answer_id){
@@ -144,8 +147,9 @@ public class QuestionController {
             return new ResponseEntity<>("Id not found",HttpStatus.NOT_FOUND);
         if(!loggedUser.getUserId().equals(q.getUserId()))
             return new ResponseEntity<>("User Cannot Update/delete question",HttpStatus.UNAUTHORIZED);
-
-        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAYWIPQKRHHPDEHIRX","xUAKGitgjGwbi2/H+/EAbWOMpfeRwJFDtWBSj6dw");
+        String accessKey=env.getProperty("aws-access-key-id");
+        String secretKey=env.getProperty("aws-secret-access-key");
+        BasicAWSCredentials creds = new BasicAWSCredentials(accessKey,secretKey);
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
@@ -193,7 +197,9 @@ public class QuestionController {
             return new ResponseEntity<>("Id not found",HttpStatus.NOT_FOUND);
         if(!loggedUser.getUserId().equals(files.getUserId()))
             return new ResponseEntity<>("User Cannot Update/delete question",HttpStatus.UNAUTHORIZED);
-        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAYWIPQKRHHPDEHIRX","xUAKGitgjGwbi2/H+/EAbWOMpfeRwJFDtWBSj6dw");
+        String accessKey=env.getProperty("aws-access-key-id");
+        String secretKey=env.getProperty("aws-secret-access-key");
+        BasicAWSCredentials creds = new BasicAWSCredentials(accessKey,secretKey);
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
@@ -226,7 +232,9 @@ public class QuestionController {
             return new ResponseEntity<>("Id Not Found",HttpStatus.NOT_FOUND);
         if(!ans.getUserId().equals(loggedUser.getUserId()))
             return new ResponseEntity<>("Cannot Upload File",HttpStatus.UNAUTHORIZED);
-        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAYWIPQKRHHPDEHIRX","xUAKGitgjGwbi2/H+/EAbWOMpfeRwJFDtWBSj6dw");
+        String accessKey=env.getProperty("aws-access-key-id");
+        String secretKey=env.getProperty("aws-secret-access-key");
+        BasicAWSCredentials creds = new BasicAWSCredentials(accessKey,secretKey);
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
@@ -277,7 +285,9 @@ public class QuestionController {
             return new ResponseEntity<>("Id Not Found",HttpStatus.NOT_FOUND);
         if(!files.getUserId().equals(loggedUser.getUserId()))
             return new ResponseEntity<>("Cannot Delete File",HttpStatus.UNAUTHORIZED);
-        BasicAWSCredentials creds = new BasicAWSCredentials("AKIAYWIPQKRHHPDEHIRX","xUAKGitgjGwbi2/H+/EAbWOMpfeRwJFDtWBSj6dw");
+        String accessKey=env.getProperty("aws-access-key-id");
+        String secretKey=env.getProperty("aws-secret-access-key");
+        BasicAWSCredentials creds = new BasicAWSCredentials(accessKey,secretKey);
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
