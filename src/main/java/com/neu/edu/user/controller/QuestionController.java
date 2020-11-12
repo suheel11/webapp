@@ -157,13 +157,13 @@ public class QuestionController implements EnvironmentAware {
             return new ResponseEntity<>("Id not found",HttpStatus.NOT_FOUND);
         if(!loggedUser.getUserId().equals(q.getUserId()))
             return new ResponseEntity<>("User Cannot Update/delete question",HttpStatus.UNAUTHORIZED);
-        //String accessKey=env.getProperty("aws-access-key-id");
-        //String secretKey=env.getProperty("aws-secret-access-key");
-        //logger.info("This is access key message");
-        //logger.info(accessKey);
-        //BasicAWSCredentials creds = new BasicAWSCredentials(accessKey,secretKey);
-        //AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
-        //final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
+        String accessKey=env.getProperty("aws-access-key-id");
+        String secretKey=env.getProperty("aws-secret-access-key");
+        logger.info("This is access key message");
+        logger.info(accessKey);
+        BasicAWSCredentials creds = new BasicAWSCredentials(accessKey,secretKey);
+        AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
+        final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
         UUID uuid = UUID.randomUUID();
         String keyName = question_id+"/"+uuid.toString()+"/"+file.getOriginalFilename();
@@ -190,7 +190,7 @@ public class QuestionController implements EnvironmentAware {
             FileOutputStream fos = new FileOutputStream(convFile);
             fos.write(file.getBytes());
             fos.close();
-            //s3.putObject(bucket_name,keyName,convFile);
+            s3.putObject(bucket_name,keyName,convFile);
             return output;
 
         }catch(AmazonServiceException | IOException e){
@@ -244,11 +244,11 @@ public class QuestionController implements EnvironmentAware {
             return new ResponseEntity<>("Id Not Found",HttpStatus.NOT_FOUND);
         if(!ans.getUserId().equals(loggedUser.getUserId()))
             return new ResponseEntity<>("Cannot Upload File",HttpStatus.UNAUTHORIZED);
-        String accessKey=env.getProperty("aws-access-key-id");
-        String secretKey=env.getProperty("aws-secret-access-key");
-        BasicAWSCredentials creds = new BasicAWSCredentials(accessKey,secretKey);
-        AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
-        final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
+        //String accessKey=env.getProperty("aws-access-key-id");
+        //String secretKey=env.getProperty("aws-secret-access-key");
+        //BasicAWSCredentials creds = new BasicAWSCredentials(accessKey,secretKey);
+        //AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
+        final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
         UUID uuid = UUID.randomUUID();
         String keyName = answer_id+"/"+uuid.toString()+"/"+file.getOriginalFilename();
