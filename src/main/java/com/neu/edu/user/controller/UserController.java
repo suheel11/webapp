@@ -2,6 +2,7 @@ package com.neu.edu.user.controller;
 
 import com.neu.edu.user.modal.User;
 import com.neu.edu.user.service.UserService;
+import com.timgroup.statsd.NonBlockingStatsDClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +21,25 @@ public class UserController {
     private UserService service;
 
     private final static Logger logger = LoggerFactory.getLogger(UserController.class);
-
+    private final NonBlockingStatsDClient client = new NonBlockingStatsDClient("my.prefix", "localhost", 8125);
     @PostMapping
     public Object addUser(@RequestBody User user){
         //System.out.println("entered first ");
         logger.info("This is Info message");
+        long startTime = System.currentTimeMillis();
+        client.incrementCounter("/user");
+
         try {
             String regex = "^[\\w-\\.+]*[\\w-\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 
             if ((user.getEmail() != null && !user.getEmail().matches(regex)) || (!service.validatePassword(user.getPassword()))) {
                 return new ResponseEntity<>("Please enter valid Credentials", HttpStatus.BAD_REQUEST);
             }
+            long endTime = System.currentTimeMillis();
+            long duration = endTime - startTime;
+            client.recordExecutionTime("/user",duration);
             return service.saveUser(user);
+
         }
         catch (Exception e){
             System.out.println("inside catch");
