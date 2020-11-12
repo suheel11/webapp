@@ -190,7 +190,7 @@ public class QuestionController implements EnvironmentAware {
             FileOutputStream fos = new FileOutputStream(convFile);
             fos.write(file.getBytes());
             fos.close();
-            s3.putObject(bucket_name,keyName,convFile);
+            //s3.putObject(bucket_name,keyName,convFile);
             return output;
 
         }catch(AmazonServiceException | IOException e){
