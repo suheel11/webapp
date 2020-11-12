@@ -249,7 +249,7 @@ public class QuestionController {
             f.setSize(String.valueOf(file.getSize()));
             f.setS3objectName(keyName);
             QuestionFiles output = questionService.saveFile(f);
-            List<QuestionFiles> l = new ArrayList<>();
+            List<QuestionFiles> l = q.getFiles();
                 l.add(f);
                 q.setFiles(l);
                 questionService.updateQuestionById(loggedUser,question_id,q);
@@ -315,6 +315,7 @@ public class QuestionController {
             Question q2 = questionService.getQuestionById(question_id);
             List l= q2.getFiles();
             l.remove(files);
+            q2.setFiles(l);
             questionService.updateQuestionById(loggedUser,question_id,q2);
             logger.info("Deleted file successfully");
             long endTime = System.currentTimeMillis();
@@ -367,17 +368,15 @@ public class QuestionController {
             f.setSize(String.valueOf(file.getSize()));
             f.setS3objectName(keyName);
             AnswerFiles output = questionService.saveAnswerFile(f);
-            List<AnswerFiles> l = new ArrayList<>();
+            List<AnswerFiles> l = ans.getFiles();
             l.add(f);
             ans.setFiles(l);
-            answerService.updateAnswerById(loggedUser,question_id,ans);
+            answerService.updateAnswerById(loggedUser,answer_id,ans);
             File convFile = new File(file.getOriginalFilename());
             convFile.createNewFile();
             FileOutputStream fos = new FileOutputStream(convFile);
             fos.write(file.getBytes());
             fos.close();
-
-
             s3.putObject(bucket_name,keyName,convFile);
             logger.info("Uploaded file to answer successfully");
             long endTime = System.currentTimeMillis();
@@ -431,6 +430,7 @@ public class QuestionController {
             Answer a2 = answerService.getAnswer(answer_id);
             List l= a2.getFiles();
             l.remove(files);
+            a2.setFiles(l);
             answerService.updateAnswerById(loggedUser,answer_id,a2);
             questionService.deleteAnswerFile(answer_id, file_id);
             logger.info("Deleted answer file from s3 successfully");
