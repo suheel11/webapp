@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.*;
 
-@Configuration
+
 @RestController
 @RequestMapping(value="/v1")
 public class QuestionController implements EnvironmentAware {
@@ -157,13 +157,13 @@ public class QuestionController implements EnvironmentAware {
             return new ResponseEntity<>("Id not found",HttpStatus.NOT_FOUND);
         if(!loggedUser.getUserId().equals(q.getUserId()))
             return new ResponseEntity<>("User Cannot Update/delete question",HttpStatus.UNAUTHORIZED);
-        String accessKey=env.getProperty("aws-access-key-id");
-        String secretKey=env.getProperty("aws-secret-access-key");
-        logger.info("This is access key message");
-        logger.info(accessKey);
-        BasicAWSCredentials creds = new BasicAWSCredentials(accessKey,secretKey);
-        AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
-        final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
+        //String accessKey=env.getProperty("aws-access-key-id");
+        //String secretKey=env.getProperty("aws-secret-access-key");
+        //logger.info("This is access key message");
+        //logger.info(accessKey);
+        //BasicAWSCredentials creds = new BasicAWSCredentials(accessKey,secretKey);
+        //AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(creds);
+        //final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").withForceGlobalBucketAccessEnabled(true).build();
         String bucket_name = "webapp.suheel.vallamkonda";
         UUID uuid = UUID.randomUUID();
         String keyName = question_id+"/"+uuid.toString()+"/"+file.getOriginalFilename();
