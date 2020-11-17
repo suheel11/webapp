@@ -28,5 +28,5 @@ Compile and Run the program
 
 To compile your project for deployment, just type 'mvn clean package'.
 
-Run the application and create the webapp
+Run the application and create the webapp Application
 
