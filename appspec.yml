@@ -8,16 +8,16 @@ files:
 hooks:
   ApplcationStop:
     - location: ./codedeploy_scripts/applicationStop.sh
-      timeout: 1200
+      timeout: 1800
 
   BeforeInstall:
     - location: ./codedeploy_scripts/beforeInstall.sh
-      timeout: 1200
+      timeout: 1800
 
   AfterInstall:
     - location: ./codedeploy_scripts/afterInstall.sh
-      timeout: 1200
+      timeout: 1800
 
   ApplicationStart:
     - location: ./codedeploy_scripts/applicationStart.sh
-      timeout: 1200
+      timeout: 1800
