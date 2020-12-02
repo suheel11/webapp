@@ -4,9 +4,7 @@ import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Regions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.amazonaws.services.sns.model.PublishRequest;
@@ -33,5 +31,5 @@ public class AwsSNSClient {
         final PublishResult publishResponse = snsClient.publish(publishRequest);
         logger.info("AmazonSNSClientClass- Published message with messageId :- " + publishResponse.getMessageId());
     }
-    
+
 }
