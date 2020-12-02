@@ -14,8 +14,8 @@ import javax.annotation.PostConstruct;
 
 @Service("amazonSNSClient")
 public class AwsSNSClient {
-    @Value("${cloud.snsTopic}")
-    private String snsTopic;
+    //@Value("${cloud.snsTopic}")
+    private String snsTopic="";
 
     private static String topicArn = "";
 
