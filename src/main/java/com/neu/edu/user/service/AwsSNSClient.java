@@ -13,13 +13,13 @@ import com.amazonaws.services.sns.model.PublishResult;
 import javax.annotation.PostConstruct;
 
 @Service("amazonSNSClient")
-public class AmazonSNSClient {
+public class AwsSNSClient {
     @Value("${cloud.snsTopic}")
     private String snsTopic;
 
     private static String topicArn = "";
 
-    private static final Logger logger = LoggerFactory.getLogger(AmazonSNSClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(AwsSNSClient.class);
 
     public void sendEmailToUser(String email) {
         logger.info("Sending mail to user using topic arn:::" + snsTopic);

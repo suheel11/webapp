@@ -3,8 +3,8 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.neu.edu.user.modal.*;
-import com.neu.edu.user.service.AmazonSNSClient;
 import com.neu.edu.user.service.AnswerService;
+import com.neu.edu.user.service.AwsSNSClient;
 import com.neu.edu.user.service.QuestionService;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import org.apache.commons.io.FilenameUtils;
@@ -34,7 +34,7 @@ public class QuestionController {
     private QuestionService questionService;
 
     @Autowired
-    private AmazonSNSClient amazonSNSClient;
+    private AwsSNSClient amazonSNSClient;
 
     @Autowired
     private AnswerService answerService;
