@@ -3,6 +3,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.neu.edu.user.modal.*;
+import com.neu.edu.user.service.AmazonSNSClient;
 import com.neu.edu.user.service.AnswerService;
 import com.neu.edu.user.service.QuestionService;
 import com.timgroup.statsd.NonBlockingStatsDClient;
@@ -31,6 +32,10 @@ import java.util.*;
 public class QuestionController {
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private AmazonSNSClient amazonSNSClient;
+
     @Autowired
     private AnswerService answerService;
     private final static Logger logger = LoggerFactory.getLogger(QuestionController.class);
@@ -168,7 +173,9 @@ public class QuestionController {
             long endTime = System.currentTimeMillis();
             long duration = endTime - startTime;
             client.recordExecutionTime("/question",duration);
+            amazonSNSClient.sendEmailToUser(user.getEmail());
             return questionService.addQuestion(question, user);
+
         }
         catch (Exception e){
             logger.error("Bad Request");
