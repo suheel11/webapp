@@ -179,6 +179,7 @@ public class QuestionController {
         }
         catch (Exception e){
             logger.error("Bad Request");
+            logger.error(String.valueOf(e));
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not Found",e);
         }
     }
