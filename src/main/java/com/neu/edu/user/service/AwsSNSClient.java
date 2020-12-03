@@ -1,6 +1,7 @@
 package com.neu.edu.user.service;
 
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ import javax.annotation.PostConstruct;
 @Service("amazonSNSClient")
 public class AwsSNSClient {
     //@Value("user-updates-topic")
-    private AmazonSNS snsClient;
+    //private AmazonSNS snsClient;
 
     private Logger logger = LoggerFactory.getLogger(AwsSNSClient.class);
 
@@ -27,11 +28,24 @@ public class AwsSNSClient {
 //    }
 
     public void sendEmailToUser(String message) {
-        this.snsClient =  AmazonSNSClientBuilder.standard().withRegion(Regions.US_EAST_1).withCredentials(DefaultAWSCredentialsProviderChain.getInstance()).build();
-        final PublishRequest publishRequest = new PublishRequest("arn:aws:sns:us-east-1:597569852494:user-updates-topic", message);
-        logger.info("AmazonSNSClientClass- Published Request : " + publishRequest.toString() + "----");
-        final PublishResult publishResponse = snsClient.publish(publishRequest);
-        logger.info("AmazonSNSClientClass- Published message with messageId :- " + publishResponse.getMessageId());
+        //this.snsClient =  AmazonSNSClientBuilder.standard().withRegion(Regions.US_EAST_1).withCredentials(DefaultAWSCredentialsProviderChain.getInstance()).build();
+        InstanceProfileCredentialsProvider provider = new InstanceProfileCredentialsProvider(true);
+        AmazonSNS snsClient=  AmazonSNSClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").build();
+        PublishRequest request = new PublishRequest("arn:aws:sns:us-east-1:597569852494:user-updates-topic", message);
+        logger.info("AmazonSNSClientClass- Published Request : " + request.toString() + "--------");
+        try{
+            PublishResult result = snsClient.publish(request);
+            logger.info("result----------"+result.toString());
+        }catch (Exception e) {
+            logger.error((e.getMessage()));
+        }
+
+//        final PublishRequest publishRequest = new PublishRequest("arn:aws:sns:us-east-1:597569852494:user-updates-topic", message);
+//        logger.info("AmazonSNSClientClass- Published Request : " + publishRequest.toString() + "----");
+//        try{
+//            final PublishResult publishResponse = snsClient.publish(publishRequest);
+//            logger.info("AmazonSNSClientClass- Published message with messageId :- " + publishResponse.getMessageId());
+//        }
     }
 
 }
