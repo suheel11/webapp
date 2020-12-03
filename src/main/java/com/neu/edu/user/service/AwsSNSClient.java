@@ -20,14 +20,14 @@ public class AwsSNSClient {
 
     private Logger logger = LoggerFactory.getLogger(AwsSNSClient.class);
 
-    @PostConstruct
-    private void init() {
-        logger.info("Inside init sns client");
-        this.snsClient = AmazonSNSClientBuilder.standard().withRegion(Regions.US_EAST_1)
-                .withCredentials(DefaultAWSCredentialsProviderChain.getInstance()).build();
-    }
+//    @PostConstruct
+//    private void init() {
+//        logger.info("Inside init sns client");
+//
+//    }
 
     public void sendEmailToUser(String message) {
+        this.snsClient =  AmazonSNSClientBuilder.standard().withRegion(Regions.US_EAST_1).withCredentials(DefaultAWSCredentialsProviderChain.getInstance()).build();
         final PublishRequest publishRequest = new PublishRequest("arn:aws:sns:us-east-1:597569852494:user-updates-topic", message);
         logger.info("AmazonSNSClientClass- Published Request : " + publishRequest.toString() + "----");
         final PublishResult publishResponse = snsClient.publish(publishRequest);
