@@ -4,7 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.neu.edu.user.modal.*;
 import com.neu.edu.user.service.AnswerService;
-import com.neu.edu.user.service.AwsSNSClient;
+import com.neu.edu.user.service.AmazonSNSClient;
 import com.neu.edu.user.service.QuestionService;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import org.apache.commons.io.FilenameUtils;
@@ -24,7 +24,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
-import java.util.*;
 
 
 @RestController
@@ -34,7 +33,7 @@ public class QuestionController {
     private QuestionService questionService;
 
     @Autowired
-    private AwsSNSClient amazonSNSClient;
+    private AmazonSNSClient amazonSNSClient;
 
     @Autowired
     private AnswerService answerService;
