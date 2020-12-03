@@ -15,13 +15,14 @@ import javax.annotation.PostConstruct;
 
 @Service("amazonSNSClient")
 public class AwsSNSClient {
-    @Value("user-updates-topic")
+    //@Value("user-updates-topic")
     private AmazonSNS snsClient;
 
     private Logger logger = LoggerFactory.getLogger(AwsSNSClient.class);
 
     @PostConstruct
     private void init() {
+        logger.info("Inside init sns client");
         this.snsClient = AmazonSNSClientBuilder.standard().withRegion(Regions.US_EAST_1)
                 .withCredentials(DefaultAWSCredentialsProviderChain.getInstance()).build();
     }
