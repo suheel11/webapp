@@ -29,8 +29,8 @@ public class AwsSNSClient {
 
     public void sendEmailToUser(String message) {
         //this.snsClient =  AmazonSNSClientBuilder.standard().withRegion(Regions.US_EAST_1).withCredentials(DefaultAWSCredentialsProviderChain.getInstance()).build();
-        InstanceProfileCredentialsProvider provider = new InstanceProfileCredentialsProvider(true);
-        AmazonSNS snsClient=  AmazonSNSClientBuilder.standard().withCredentials(provider).withRegion("us-east-1").build();
+        //InstanceProfileCredentialsProvider provider = new InstanceProfileCredentialsProvider(true);
+        AmazonSNS snsClient=  AmazonSNSClientBuilder.defaultClient();
         PublishRequest request = new PublishRequest("arn:aws:sns:us-east-1:597569852494:user-updates-topic", message);
         logger.info("AmazonSNSClientClass- Published Request : " + request.toString() + "--------");
         try{
