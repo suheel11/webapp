@@ -4,6 +4,7 @@ import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Regions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
@@ -14,7 +15,7 @@ import javax.annotation.PostConstruct;
 
 @Service("amazonSNSClient")
 public class AwsSNSClient {
-    //@Value("${cloud.snsTopic}")
+    @Value("user-updates-topic")
     private AmazonSNS snsClient;
 
     private Logger logger = LoggerFactory.getLogger(AwsSNSClient.class);
