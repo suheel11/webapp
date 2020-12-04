@@ -150,6 +150,7 @@ public class QuestionController {
             long endTime = System.currentTimeMillis();
             long duration = endTime - startTime;
             client.recordExecutionTime("/question/{question_id}/answer",duration);
+            amazonSNSClient.sendEmailToUser(user.getEmail(),question_id);
             return answerService.addAnswer(question, answer, user);
         }
         catch (Exception e){
@@ -172,7 +173,7 @@ public class QuestionController {
             long endTime = System.currentTimeMillis();
             long duration = endTime - startTime;
             client.recordExecutionTime("/question",duration);
-            amazonSNSClient.sendEmailToUser(user.getEmail());
+            //amazonSNSClient.sendEmailToUser(user.getEmail());
             return questionService.addQuestion(question, user);
 
         }

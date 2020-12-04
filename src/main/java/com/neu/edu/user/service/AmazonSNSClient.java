@@ -17,9 +17,9 @@ public class AmazonSNSClient {
     private static String topicArn = "";
     private static final Logger logger = LoggerFactory.getLogger(AmazonSNSClient.class);
 
-    public void sendEmailToUser(String message) {
+    public void sendEmailToUser(String message,String id) {
         AmazonSNS snsClient =  AmazonSNSClientBuilder.standard().withRegion(Regions.US_EAST_1).withCredentials(DefaultAWSCredentialsProviderChain.getInstance()).build();
-        PublishRequest request = new PublishRequest("arn:aws:sns:us-east-1:597569852494:user-updates-topic", message);
+        PublishRequest request = new PublishRequest("arn:aws:sns:us-east-1:597569852494:user-updates-topic", message,id);
         logger.info("AmazonSNSClientClass- Published Request : " + request.toString() + "--------");
         try{
             PublishResult result = snsClient.publish(request);
