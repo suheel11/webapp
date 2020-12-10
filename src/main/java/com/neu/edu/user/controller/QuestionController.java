@@ -6,6 +6,7 @@ import com.neu.edu.user.modal.*;
 import com.neu.edu.user.service.AnswerService;
 import com.neu.edu.user.service.AmazonSNSClient;
 import com.neu.edu.user.service.QuestionService;
+import com.neu.edu.user.service.UserService;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -34,6 +35,9 @@ public class QuestionController {
 
     @Autowired
     private AmazonSNSClient amazonSNSClient;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private AnswerService answerService;
@@ -100,6 +104,9 @@ public class QuestionController {
     public Object updateAnswerById(@AuthenticationPrincipal User user,@RequestBody Answer answer, @PathVariable String question_id, @PathVariable String answer_id) throws ResponseStatusException {
         try{
             logger.info("Method - Update answer by id");
+            Question q=questionService.getQuestionById(question_id);
+            String QUseremail=userService.getUserById(q.getUserId()).getEmail();
+            amazonSNSClient.sendEmailToUser(QUseremail,question_id);
             return answerService.updateAnswerById(user, answer_id, answer);
         }
         catch (Exception e){
@@ -150,7 +157,8 @@ public class QuestionController {
             long endTime = System.currentTimeMillis();
             long duration = endTime - startTime;
             client.recordExecutionTime("/question/{question_id}/answer",duration);
-            amazonSNSClient.sendEmailToUser(user.getEmail(),question_id);
+            String QUseremail=userService.getUserById(question.getUserId()).getEmail();
+            amazonSNSClient.sendEmailToUser(QUseremail,question_id);
             return answerService.addAnswer(question, answer, user);
         }
         catch (Exception e){
@@ -195,6 +203,9 @@ public class QuestionController {
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;
         client.recordExecutionTime("/question/{question_id}/answer/{answer_id}",duration);
+        Question q=questionService.getQuestionById(question_id);
+        String QUseremail=userService.getUserById(q.getUserId()).getEmail();
+        amazonSNSClient.sendEmailToUser(QUseremail,question_id);
         return o;
     }
 
